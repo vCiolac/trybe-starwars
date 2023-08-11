@@ -1,26 +1,14 @@
 import React from 'react';
-import useFetch from 'react-fetch-hook';
 import { PlanetType } from '../types';
 
 interface TableProps {
-  apiURL: string;
+  planets: PlanetType[];
+  loading: boolean;
 }
 
-function Table({ apiURL }: TableProps) {
-  const { isLoading, data, error } = useFetch<PlanetType[]>(apiURL);
-  console.log(data);
-
-  if (isLoading) {
+function Table({ planets, loading }: TableProps) {
+  if (loading) {
     return <p>Loading...</p>;
-  }
-
-  if (error) {
-    return (
-      <div>
-        <p>Error:</p>
-        <p>{error.message}</p>
-      </div>
-    );
   }
 
   return (
@@ -44,7 +32,7 @@ function Table({ apiURL }: TableProps) {
           </tr>
         </thead>
         <tbody>
-          {data?.results.map((planet: any, index: any) => (
+          {planets.map((planet: PlanetType, index: number) => (
             <tr key={ index }>
               <td>{planet.name}</td>
               <td>{planet.rotation_period}</td>
@@ -57,7 +45,7 @@ function Table({ apiURL }: TableProps) {
               <td>{planet.population}</td>
               <td>
                 <ul>
-                  {planet.films.map((film: any, filmIndex: any) => (
+                  {planet.films.map((film: string, filmIndex: number) => (
                     <li key={ filmIndex }>{film}</li>
                   ))}
                 </ul>
