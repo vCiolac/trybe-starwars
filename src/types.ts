@@ -22,3 +22,26 @@ export enum PlanetColumn {
   RotationPeriod = 'rotation_period',
   SurfaceWater = 'surface_water',
 }
+
+export interface Filter {
+  column: PlanetColumn;
+  comparison: string;
+  value: string;
+}
+
+export interface FilterOptions {
+  filteredColumns: PlanetColumn;
+  filteredComparison: string;
+  filteredValue: string;
+  filters: Filter[];
+  src: string;
+  filterOptions: PlanetColumn[];
+  filteredPlanets: PlanetType[];
+  handleColumnChange: (value: PlanetColumn) => void;
+  handleComparisonChange: (value: string) => void;
+  handleValueChange: (value: string) => void;
+  handleSearch: (searchTerm: string) => void;
+  addFilter: () => void;
+  clearFilters: () => void;
+  removeFilter: (index: number) => void;
+}

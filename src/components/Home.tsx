@@ -1,96 +1,29 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import Table from './Table';
-import { PlanetColumn, PlanetType } from '../types';
+import { PlanetColumn } from '../types';
 import PlanetContext from '../context/planets-context';
+import useFilter from '../hooks/useFilter';
 
 function Home() {
   const context = useContext(PlanetContext);
   const { planetData, loading } = context || { planetData: [], loading: true };
-  const [src, setSearchTerm] = useState('');
-  const [filteredColumns, setFilteredColumns] = useState<PlanetColumn>(
-    PlanetColumn.Population,
-  );
-  const [filteredComparison, setFilteredComparison] = useState<string>('maior que');
-  const [filteredValue, setFilteredValue] = useState('0');
-  const [filteredPlanets, setFilteredPlanets] = useState<PlanetType[]>(planetData);
-  const [filters, setFilters] = useState<{
-    column: PlanetColumn;
-    comparison: string;
-    value: string }[]>([]);
 
-  const addFilter = () => {
-    if (filteredColumns && filteredComparison && filteredValue) {
-      const newFilter = {
-        column: filteredColumns,
-        comparison: filteredComparison,
-        value: filteredValue,
-      };
-      setFilters([...filters, newFilter]);
-    }
-  };
-
-  const removeFilter = (index: number) => {
-    const newFilters = filters.filter((_, i) => i !== index);
-    setFilters(newFilters);
-  };
-
-  const applyFilters = (data: PlanetType[]) => {
-    let ft = [...data];
-
-    filters.forEach((filter) => {
-      const value = parseFloat(filter.value);
-      if (!Number.isNaN(value)) {
-        ft = ft.filter((planet) => {
-          const planetValue = parseFloat(planet[filter.column]);
-          if (!Number.isNaN(planetValue)) {
-            switch (filter.comparison) {
-              case 'maior que':
-                return planetValue > value;
-              case 'menor que':
-                return planetValue < value;
-              case 'igual a':
-                return planetValue === value;
-              default:
-                return false;
-            }
-          }
-          return false;
-        });
-      }
-    });
-
-    if (src) {
-      ft = ft.filter((planet) => planet.name.toLowerCase().includes(src.toLowerCase()));
-    }
-
-    return ft;
-  };
-
-  useEffect(() => {
-    const filteredData = applyFilters(planetData);
-    setFilteredPlanets(filteredData);
-  }, [planetData, filters, src]);
-
-  const handleSearch = (search: string) => {
-    setSearchTerm(search);
-  };
-
-  const handleFilter = () => {
-    const filteredData = applyFilters(planetData);
-    setFilteredPlanets(filteredData);
-  };
-
-  const handleColumnChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFilteredColumns(e.target.value as PlanetColumn);
-  };
-
-  const handleComparisonChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFilteredComparison(e.target.value);
-  };
-
-  const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFilteredValue(e.target.value);
-  };
+  const {
+    filteredColumns,
+    filteredComparison,
+    filteredValue,
+    filterOptions,
+    filters,
+    src,
+    handleColumnChange,
+    handleComparisonChange,
+    handleValueChange,
+    handleSearch,
+    addFilter,
+    clearFilters,
+    removeFilter,
+    filteredPlanets,
+  } = useFilter(planetData);
 
   return (
     <div>
@@ -106,9 +39,9 @@ function Home() {
       <select
         data-testid="column-filter"
         value={ filteredColumns }
-        onChange={ handleColumnChange }
+        onChange={ (e) => handleColumnChange(e.target.value as PlanetColumn) }
       >
-        {Object.values(PlanetColumn).map((column) => (
+        {filterOptions.map((column) => (
           <option key={ column } value={ column }>
             {column}
           </option>
@@ -118,7 +51,7 @@ function Home() {
       <select
         data-testid="comparison-filter"
         value={ filteredComparison }
-        onChange={ handleComparisonChange }
+        onChange={ (e) => handleComparisonChange(e.target.value) }
       >
         <option value="maior que">maior que</option>
         <option value="menor que">menor que</option>
@@ -128,29 +61,27 @@ function Home() {
         type="number"
         data-testid="value-filter"
         value={ filteredValue }
-        onChange={ handleValueChange }
-        placeholder="Enter value"
+        onChange={ (e) => handleValueChange(e.target.value) }
       />
       <button
         data-testid="button-filter"
         onClick={ () => {
           addFilter();
-          handleFilter();
         } }
       >
         Aplicar Filtro
       </button>
       <button
+        data-testid="button-remove-filters"
         onClick={ () => {
-          setFilters([]);
-          handleFilter();
+          clearFilters();
         } }
       >
         Limpar Filtros
       </button>
       <div>
         {filters.map((filter, index) => (
-          <div key={ index }>
+          <div data-testid="filter" key={ index }>
             Filtro
             {' '}
             {index + 1}
