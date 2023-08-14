@@ -7,11 +7,16 @@ function Home() {
   const context = useContext(PlanetContext);
   const { planetData, loading } = context || { planetData: [], loading: true };
   const [src, setSearchTerm] = useState('');
-  const [filteredColumns, setFilteredColumns] = useState<PlanetColumn | ''>('');
-  const [filteredComparison, setFilteredComparison] = useState<string>('');
+  const [filteredColumns, setFilteredColumns] = useState<PlanetColumn>(
+    PlanetColumn.Population,
+  );
+  const [filteredComparison, setFilteredComparison] = useState<string>('maior que');
   const [filteredValue, setFilteredValue] = useState('0');
   const [filteredPlanets, setFilteredPlanets] = useState<PlanetType[]>(planetData);
-  const [filters, setFilters] = useState<{ column: PlanetColumn; comparison: string; value: string }[]>([]);
+  const [filters, setFilters] = useState<{
+    column: PlanetColumn;
+    comparison: string;
+    value: string }[]>([]);
 
   const addFilter = () => {
     if (filteredColumns && filteredComparison && filteredValue) {
@@ -22,6 +27,11 @@ function Home() {
       };
       setFilters([...filters, newFilter]);
     }
+  };
+
+  const removeFilter = (index: number) => {
+    const newFilters = filters.filter((_, i) => i !== index);
+    setFilters(newFilters);
   };
 
   const applyFilters = (data: PlanetType[]) => {
@@ -151,6 +161,7 @@ function Home() {
             {filter.comparison}
             {' '}
             {filter.value}
+            <button onClick={ () => removeFilter(index) }>Remover</button>
           </div>
         ))}
       </div>
