@@ -14,3 +14,24 @@ export type PlanetType = {
   edited: string;
   url: string;
 };
+
+export enum PlanetColumn {
+  Population = 'population',
+  OrbitalPeriod = 'orbital_period',
+  Diameter = 'diameter',
+  RotationPeriod = 'rotation_period',
+  SurfaceWater = 'surface_water',
+}
+
+export type ColumnFilterType = {
+  column: PlanetColumn | '';
+  comparison: string;
+  value: string;
+  src: string;
+};
+
+export type PlanetContextType = {
+  planetData: PlanetType[];
+  loading: boolean;
+  applyFilters: (data: PlanetType[], filters: ColumnFilterType) => PlanetType[];
+};

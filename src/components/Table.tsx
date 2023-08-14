@@ -32,7 +32,7 @@ function Table({ planets, loading }: TableProps) {
           </tr>
         </thead>
         <tbody>
-          {planets.map((planet: PlanetType, index: number) => (
+          {planets?.map((planet: PlanetType, index: number) => (
             <tr key={ index }>
               <td>{planet.name}</td>
               <td>{planet.rotation_period}</td>
