@@ -63,8 +63,8 @@ const useFilter = (planetData: PlanetType[]): FilterOptions => {
   };
 
   const applyFilters = useCallback(
-    (data: PlanetType[]): PlanetType[] => {
-      let ft = [...data];
+    (planetsData: PlanetType[]): PlanetType[] => {
+      let ft = [...planetsData];
 
       filters.forEach((filter) => {
         const value = parseFloat(filter.value);

@@ -45,3 +45,16 @@ export interface FilterOptions {
   clearFilters: () => void;
   removeFilter: (index: number) => void;
 }
+
+export interface SortOptions {
+  sortColumn: PlanetColumn;
+  sortDirection: 'ASC' | 'DESC';
+  handleSortChange: (value: PlanetColumn) => void;
+  handleSortDirection: (value: 'ASC' | 'DESC') => void;
+  handleSortSubmit: (filteredPlanets: PlanetType[]) => void;
+}
+
+export type SortProps = {
+  sortColumn: PlanetColumn;
+  sortDirection: 'ASC' | 'DESC';
+};

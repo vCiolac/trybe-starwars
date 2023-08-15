@@ -1,12 +1,16 @@
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import Table from './Table';
 import { PlanetColumn } from '../types';
 import PlanetContext from '../context/planets-context';
 import useFilter from '../hooks/useFilter';
+import useSort from '../hooks/useSort';
 
 function Home() {
   const context = useContext(PlanetContext);
-  const { planetData, loading } = context || { planetData: [], loading: true };
+  const { planetData, loading, setSortState = () => {} } = context || {
+    planetData: [],
+    loading: true,
+  };
 
   const {
     filteredColumns,
@@ -25,6 +29,19 @@ function Home() {
     filteredPlanets,
   } = useFilter(planetData);
 
+  const {
+    sortColumn,
+    sortDirection,
+    handleSortChange,
+    handleSortDirection,
+    handleSortSubmit,
+  } = useSort();
+
+  const sortedAndFilteredPlanets = useMemo(() => {
+    const sortedData = handleSortSubmit(filteredPlanets);
+    return sortedData;
+  }, [handleSortSubmit, filteredPlanets]);
+
   return (
     <div>
       <h1>Projeto Star Wars - Trybe</h1>
@@ -35,6 +52,7 @@ function Home() {
         data-testid="name-filter"
         placeholder="Search by name"
       />
+      <br />
       <label htmlFor="column-filter">Coluna:</label>
       <select
         data-testid="column-filter"
@@ -80,6 +98,49 @@ function Home() {
         Limpar Filtros
       </button>
       <div>
+        <label htmlFor="column-sort">Ordenar por:</label>
+        <select
+          data-testid="column-sort"
+          value={ sortColumn }
+          onChange={ (e) => handleSortChange(e.target.value as PlanetColumn) }
+        >
+          {filterOptions.map((column) => (
+            <option key={ column } value={ column }>
+              {column}
+            </option>
+          ))}
+        </select>
+        <label htmlFor="column-sort-input-asc">Ascendente:</label>
+        <input
+          type="radio"
+          data-testid="column-sort-input-asc"
+          name="sort-direction"
+          value="ASC"
+          checked={ sortDirection === 'ASC' }
+          onChange={ () => handleSortDirection('ASC') }
+        />
+        <label htmlFor="column-sort-input-desc">Descendente</label>
+        <input
+          type="radio"
+          data-testid="column-sort-input-desc"
+          name="sort-direction"
+          value="DESC"
+          checked={ sortDirection === 'DESC' }
+          onChange={ () => handleSortDirection('DESC') }
+        />
+        <button
+          data-testid="column-sort-button"
+          onClick={ () => {
+            setSortState({
+              sortColumn,
+              sortDirection,
+            });
+          } }
+        >
+          Ordenar
+        </button>
+      </div>
+      <div>
         {filters.map((filter, index) => (
           <div data-testid="filter" key={ index }>
             Filtro
@@ -96,7 +157,7 @@ function Home() {
           </div>
         ))}
       </div>
-      <Table planets={ filteredPlanets } loading={ loading } />
+      <Table planets={ sortedAndFilteredPlanets } loading={ loading } />
     </div>
   );
 }

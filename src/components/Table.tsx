@@ -2,7 +2,7 @@ import React from 'react';
 import { PlanetType } from '../types';
 
 interface TableProps {
-  planets: PlanetType[];
+  planets: PlanetType[] | void;
   loading: boolean;
 }
 
@@ -34,7 +34,7 @@ function Table({ planets, loading }: TableProps) {
         <tbody>
           {planets?.map((planet: PlanetType, index: number) => (
             <tr key={ index }>
-              <td>{planet.name}</td>
+              <td data-testid="planet-name">{planet.name}</td>
               <td>{planet.rotation_period}</td>
               <td>{planet.orbital_period}</td>
               <td>{planet.diameter}</td>
