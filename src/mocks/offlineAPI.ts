@@ -7,6 +7,9 @@ const movie6 = 'https://swapi.dev/api/films/6/';
 const newton = '1 standard';
 
 export const offlineAPI = {
+  count: 60,
+  next: 'https://swapi-trybe.herokuapp.com/api/planets/?page=2',
+  previous: null,
   results: [
     {
       name: 'Yavin IV',
