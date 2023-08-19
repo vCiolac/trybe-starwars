@@ -5,9 +5,11 @@ import Home from './components/Home';
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" Component={ Home } />
-    </Routes>
+    <div className="app-container">
+      <Routes>
+        <Route path="/" Component={ Home } />
+      </Routes>
+    </div>
   );
 }
 

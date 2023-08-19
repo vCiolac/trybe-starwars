@@ -1,13 +1,71 @@
 import React, { useContext, useMemo } from 'react';
+import styled from 'styled-components';
 import Table from './Table';
 import { PlanetColumn } from '../types';
 import PlanetContext from '../context/planets-context';
 import useFilter from '../hooks/useFilter';
 import useSort from '../hooks/useSort';
+import {
+  ApplyButton,
+  ClearButton,
+  CenteredContent,
+  SelectPor,
+  Container,
+  InputValue,
+  Label,
+  Label2,
+  Label3,
+  SearchInput,
+  Select,
+  InputASC,
+  InputDSC,
+} from '../styles/home';
+import Header from './Header';
+import { TableContainer } from '../styles/table';
+
+const LabelASC = styled.label`
+  color: #aeaeae;
+  font-family: 'Epilogue-Regular', Helvetica;
+  font-size: 12px;
+  position: relative;
+  @media (max-width: 768px) {
+    top: 4.3rem;
+    left: 3rem;
+  }
+  @media (min-width: 769px) and (max-width: 1367px) {
+    top: -2.2rem;
+    left: 6rem;
+  }
+  @media (min-width: 1440px) {
+    top: -2.2rem;
+    left: 6rem;
+
+  }
+`;
+
+const LabelDSC = styled.label`
+  color: #aeaeae;
+  font-family: 'Epilogue-Regular', Helvetica;
+  font-size: 12px;
+  position: relative;
+  @media (max-width: 768px) {
+    top: 6.5rem;
+    left: -2rem;
+  }
+  @media (min-width: 769px) and (max-width: 1367px) {
+    top: -2.2rem;
+    left: 6rem;
+  }
+  @media (min-width: 1440px) {
+    top: -2.2rem;
+    left: 6rem;
+
+  }
+`;
 
 function Home() {
   const context = useContext(PlanetContext);
-  const { planetData, loading, setSortState = () => {} } = context || {
+  const { planetData, loading } = context || {
     planetData: [],
     loading: true,
   };
@@ -43,63 +101,63 @@ function Home() {
   }, [handleSortSubmit, filteredPlanets]);
 
   return (
-    <div>
-      <h1>Projeto Star Wars - Trybe</h1>
-      <input
-        type="text"
-        value={ src }
-        onChange={ (e) => handleSearch(e.target.value) }
-        data-testid="name-filter"
-        placeholder="Search by name"
-      />
-      <br />
-      <label htmlFor="column-filter">Coluna:</label>
-      <select
-        data-testid="column-filter"
-        value={ filteredColumns }
-        onChange={ (e) => handleColumnChange(e.target.value as PlanetColumn) }
-      >
-        {filterOptions.map((column) => (
-          <option key={ column } value={ column }>
-            {column}
-          </option>
-        ))}
-      </select>
-      <label htmlFor="comparison-filter">Operador:</label>
-      <select
-        data-testid="comparison-filter"
-        value={ filteredComparison }
-        onChange={ (e) => handleComparisonChange(e.target.value) }
-      >
-        <option value="maior que">maior que</option>
-        <option value="menor que">menor que</option>
-        <option value="igual a">igual a</option>
-      </select>
-      <input
-        type="number"
-        data-testid="value-filter"
-        value={ filteredValue }
-        onChange={ (e) => handleValueChange(e.target.value) }
-      />
-      <button
-        data-testid="button-filter"
-        onClick={ () => {
-          addFilter();
-        } }
-      >
-        Aplicar Filtro
-      </button>
-      <button
-        data-testid="button-remove-filters"
-        onClick={ () => {
-          clearFilters();
-        } }
-      >
-        Limpar Filtros
-      </button>
-      <div>
-        <label htmlFor="column-sort">Ordenar por:</label>
-        <select
+    <CenteredContent>
+      <Header />
+      <Container>
+        <SearchInput
+          type="text"
+          value={ src }
+          onChange={ (e) => handleSearch(e.target.value) }
+          data-testid="name-filter"
+          placeholder="Search by name"
+        />
+        <br />
+        <Label htmlFor="column-filter">Coluna:</Label>
+        <Select
+          data-testid="column-filter"
+          value={ filteredColumns }
+          onChange={ (e) => handleColumnChange(e.target.value as PlanetColumn) }
+        >
+          {filterOptions.map((column) => (
+            <option key={ column } value={ column }>
+              {column}
+            </option>
+          ))}
+        </Select>
+        <Label2 htmlFor="comparison-filter">Operador:</Label2>
+        <Select
+          data-testid="comparison-filter"
+          value={ filteredComparison }
+          onChange={ (e) => handleComparisonChange(e.target.value) }
+        >
+          <option value="maior que">maior que</option>
+          <option value="menor que">menor que</option>
+          <option value="igual a">igual a</option>
+        </Select>
+        <InputValue
+          type="number"
+          data-testid="value-filter"
+          value={ filteredValue }
+          onChange={ (e) => handleValueChange(e.target.value) }
+        />
+        <ApplyButton
+          data-testid="button-filter"
+          onClick={ () => {
+            addFilter();
+          } }
+        >
+          Filtrar
+        </ApplyButton>
+        <ClearButton
+          data-testid="button-remove-filters"
+          onClick={ () => {
+            clearFilters();
+          } }
+        >
+          Limpar
+        </ClearButton>
+        <Label3 htmlFor="column-sort">Ordenar por:</Label3>
+        <SelectPor
           data-testid="column-sort"
           value={ sortColumn }
           onChange={ (e) => handleSortChange(e.target.value as PlanetColumn) }
@@ -109,9 +167,9 @@ function Home() {
               {column}
             </option>
           ))}
-        </select>
-        <label htmlFor="column-sort-input-asc">Ascendente:</label>
-        <input
+        </SelectPor>
+        <LabelASC htmlFor="column-sort-input-asc">Ascendente:</LabelASC>
+        <InputASC
           type="radio"
           data-testid="column-sort-input-asc"
           name="sort-direction"
@@ -119,8 +177,8 @@ function Home() {
           checked={ sortDirection === 'ASC' }
           onChange={ () => handleSortDirection('ASC') }
         />
-        <label htmlFor="column-sort-input-desc">Descendente</label>
-        <input
+        <LabelDSC htmlFor="column-sort-input-desc">Descendente</LabelDSC>
+        <InputDSC
           type="radio"
           data-testid="column-sort-input-desc"
           name="sort-direction"
@@ -128,37 +186,28 @@ function Home() {
           checked={ sortDirection === 'DESC' }
           onChange={ () => handleSortDirection('DESC') }
         />
-        <button
-          data-testid="column-sort-button"
-          onClick={ () => {
-            setSortState({
-              sortColumn,
-              sortDirection,
-            });
-          } }
-        >
-          Ordenar
-        </button>
-      </div>
-      <div>
-        {filters.map((filter, index) => (
-          <div data-testid="filter" key={ index }>
-            Filtro
-            {' '}
-            {index + 1}
-            :
-            {' '}
-            {filter.column}
-            {' '}
-            {filter.comparison}
-            {' '}
-            {filter.value}
-            <button onClick={ () => removeFilter(index) }>Remover</button>
-          </div>
-        ))}
-      </div>
-      <Table planets={ sortedAndFilteredPlanets } loading={ loading } />
-    </div>
+        <div>
+          {filters.map((filter, index) => (
+            <div data-testid="filter" key={ index }>
+              Filtro
+              {' '}
+              {index + 1}
+              :
+              {' '}
+              {filter.column}
+              {' '}
+              {filter.comparison}
+              {' '}
+              {filter.value}
+              <button onClick={ () => removeFilter(index) }>Remover</button>
+            </div>
+          ))}
+        </div>
+        <TableContainer>
+          <Table planets={ sortedAndFilteredPlanets } loading={ loading } />
+        </TableContainer>
+      </Container>
+    </CenteredContent>
   );
 }
 
