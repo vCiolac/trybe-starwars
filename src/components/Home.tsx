@@ -6,8 +6,6 @@ import PlanetContext from '../context/planets-context';
 import useFilter from '../hooks/useFilter';
 import useSort from '../hooks/useSort';
 import {
-  ApplyButton,
-  ClearButton,
   CenteredContent,
   SelectPor,
   Container,
@@ -20,6 +18,10 @@ import {
   InputASC,
   InputDSC,
 } from '../styles/home';
+import {
+  ApplyButton,
+  ClearButton,
+} from '../styles/home2';
 import Header from './Header';
 import { TableContainer } from '../styles/table';
 
